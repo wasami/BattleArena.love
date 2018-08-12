@@ -1,4 +1,6 @@
-local Player = require 'Player'
+class = require 'Library.middleclass'
+anim8 = require 'Library.anim8'
+Player = require 'Player'
 
 function love.load()
    p1 = player:new()

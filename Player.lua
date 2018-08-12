@@ -8,8 +8,6 @@
   southwest = 7
   northwest = 8
 --]]
-local anim8 = require 'Library.anim8'
-local class = require 'Library.middleclass'
 player = class('player')
 
 function player:initialize()
