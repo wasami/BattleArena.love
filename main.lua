@@ -1,6 +1,9 @@
+require 'conf'
 class = require 'Library.middleclass'
 anim8 = require 'Library.anim8'
-Player = require 'Player'
+require 'Projectiles.projectile'
+require 'player'
+require 'bullet'
 
 function love.load()
    p1 = player:new()

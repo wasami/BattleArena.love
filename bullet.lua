@@ -9,12 +9,13 @@
   southwest = 7
   northwest = 8
 --]]
-local projectile = require 'projectile'
 
-local bullet = class('Bullet', Projectile)
+bullet = class("bullet", projectile)
 
-function Bullet:initialise(x, y, direction)
+function bullet:initialize(x, y, direction)
     -- initialise position so bullet looks like it comes from out of player and not within.
+    projectile.initialize(self, x, y, direction)
+
     if direction == 1 then
         x = self.x + 16
         y = self.y
@@ -40,15 +41,13 @@ function Bullet:initialise(x, y, direction)
         x = self.x
         y = self.y
       end
-      
-    Projectile.initialize(self, x, y, direction)
 end
 
-function Bullet:update(dt)
-    Projectile.update(self, dt)
+function bullet:update(dt)
+    projectile.update(self, dt)
 end
 
-function Bullet:draw()
+function bullet:draw()
     love.graphics.rectangle("fill", self.x, self.y, 5, 5)
 end
 

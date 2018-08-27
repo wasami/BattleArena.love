@@ -25,39 +25,11 @@ function player:initialize()
   self.y = 10
   self.speed = 100
   self.ability = {}
+
   self.punch = function()
     movement:pause()
   end
-  self.fire = function()
-    bullet = {}
-    bullet.direction = self.direction
-    if bullet.direction == 1 then
-      bullet.x = self.x + 16
-      bullet.y = self.y
-    elseif bullet.direction == 2 then
-      bullet.x = self.x + 32
-      bullet.y = self.y + 16
-    elseif bullet.direction == 3 then
-      bullet.x = self.x + 16
-      bullet.y = self.y + 32
-    elseif bullet.direction == 4 then
-      bullet.x = self.x
-      bullet.y = self.y + 16
-    elseif bullet.direction == 5 then
-      bullet.x = self.x + 32
-      bullet.y = self.y
-    elseif bullet.direction == 6 then
-      bullet.x = self.x + 32
-      bullet.y = self.y + 32
-    elseif bullet.direction == 7 then
-      bullet.y = self.y + 32
-      bullet.x = self.x
-    elseif bullet.direction == 8 then
-      bullet.x = self.x
-      bullet.y = self.y
-    end
-    table.insert(self.ability, bullet)
-  end
+    
 
   movement = {
     anim8.newAnimation(p32(4,3, 13,2, 8,3, 12,3),0.1),--north
@@ -137,41 +109,7 @@ function player:update(dt)
   end
 
   if love.keyboard.isDown("f") then
-    self.fire()
-  end
-
-
-  for i,v in ipairs(self.ability) do
-    if v.y < -10 then
-      table.remove(self.ability, i)
-    elseif v.x < -10 then
-      table.remove(self.ability, i)
-    elseif v.x > 800 then
-      table.remove(self.ability, i)
-    elseif v.y > 600 then
-      table.remove(self.ability, i)
-    end
-    if v.direction == 1 then
-      v.y = v.y - 5
-    elseif v.direction == 2 then
-      v.x = v.x + 5
-    elseif v.direction == 3 then
-      v.y = v.y + 5
-    elseif v.direction == 4 then
-      v.x = v.x - 5
-    elseif v.direction == 5 then
-      v.y = v.y - 5
-      v.x = v.x + 5
-    elseif v.direction == 6 then
-      v.y = v.y + 5
-      v.x = v.x + 5
-    elseif v.direction == 7 then
-      v.y = v.y + 5
-      v.x = v.x - 5
-    elseif v.direction == 8 then
-      v.y = v.y - 5
-      v.x = v.x - 5
-    end
+    bullet:new()
   end
 
 end
@@ -191,4 +129,5 @@ function player:draw()
   for _,v in pairs(self.ability) do
     love.graphics.rectangle("fill", v.x, v.y, 5, 5)
   end
+
 end
