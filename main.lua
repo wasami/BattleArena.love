@@ -10,13 +10,44 @@ local map
 local world
 
 function love.load()
-   p1 = player:new()
+
+  -- load map
+  map = sti("map/map.lua", { "bump" })
+
+  --prepare physics world
+  -- world = love.physics.newWorld(0, 0)
+
+  -- prepare collision objects
+  -- map:box2d_init(world)
+
+  -- add coustom layer for sprites
+  -- map:addCustomLayer("Sprite Layer", 3)
+
+  -- Add data to Custom Layer
+  -- local spriteLayer = map.layers["Sprite Layer"]
+  -- spriteLayer.sprites = {
+  --   --player1 = player:new()
+
+  -- }
+   --p1 = player:new()
+
+   
+   -- Update callback for Custom Layer
+	-- function spriteLayer:update(dt)
+	-- 	for _, sprite in pairs(self.sprites) do
+	-- 		sprite.r = sprite.r + math.rad(90 * dt)
+	-- 	end
+  -- end
+  
+
 end
 
 function love.update(dt)
-  p1:update(dt)
+  map:update(dt)
+  --p1:update(dt)
 end
 
 function love.draw()
-  p1:draw()
+  map:draw()
+  --p1:draw()
 end
