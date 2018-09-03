@@ -1,8 +1,8 @@
-class = require 'Library.middleclass'
-anim8 = require 'Library.anim8'
-require 'Projectiles.projectile'
-require 'player'
-require 'bullet'
+class = require "Library.middleclass"
+anim8 = require "Library.anim8"
+require "Projectiles.projectile"
+require "player"
+require "bullet"
 
 
 local sti = require "sti"
@@ -10,9 +10,9 @@ local map
 local world
 
 function love.load()
-
+  love.window.setMode(640, 640)
   -- load map
-  map = sti("map/map.lua", { "bump" })
+  map = sti("Map/map.lua", { "bump" })
 
   --prepare physics world
   -- world = love.physics.newWorld(0, 0)
@@ -21,23 +21,31 @@ function love.load()
   -- map:box2d_init(world)
 
   -- add coustom layer for sprites
-  -- map:addCustomLayer("Sprite Layer", 3)
+  local layer = map:addCustomLayer("Sprite Layer", 3)
 
-  -- Add data to Custom Layer
-  -- local spriteLayer = map.layers["Sprite Layer"]
-  -- spriteLayer.sprites = {
-  --   --player1 = player:new()
+  -- Get player spawn object
+  local playerSpawn
+    for k, object in pairs(map.objects) do
+        if object.name == "Player" then
+            playerSpawn = object
+            break
+        end
+    end
+  
+  
+  layer.player = player:new(playerSpawn.x, playerSpawn.y)
 
-  -- }
-   --p1 = player:new()
+  -- Draw player
+  layer.draw = function(self)
+    self.player:draw()
+  end
 
-   
-   -- Update callback for Custom Layer
-	-- function spriteLayer:update(dt)
-	-- 	for _, sprite in pairs(self.sprites) do
-	-- 		sprite.r = sprite.r + math.rad(90 * dt)
-	-- 	end
-  -- end
+  -- controls for player
+  layer.update = function(self, dt)
+    self.player:update(dt)
+  end
+  -- Remove unneeded object layer
+  map:removeLayer("Spawn Point")
   
 
 end
