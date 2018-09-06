@@ -59,7 +59,7 @@ function player:initialize(x, y)
       anim8.newAnimation(p32(12,5, 3,6),0.1),--southwest
     }
 
-  print("player was initialized")
+  -- print("player was initialized")
 end
 
 function player:update(dt)
