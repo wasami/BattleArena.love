@@ -6,6 +6,7 @@ function projectile:initialize(x, y, direction)
     self.y = y
     self.direction = direction
     self.speed = 50 -- deafault
+    self.isActive = true 
 end
 
 function projectile:reInitilize(x, y, direction)
@@ -13,6 +14,7 @@ function projectile:reInitilize(x, y, direction)
     self.y = y
     self.direction = direction
     self.speed = 50 -- deafault
+    self.isActive = true 
 end
 
 function projectile:update(dt)
@@ -54,4 +56,5 @@ end
 
 function projectile:delete()
   self.x, self.y = 0
+  self.isActive = false
 end

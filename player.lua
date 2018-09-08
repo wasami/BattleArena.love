@@ -107,9 +107,9 @@ function player:update(dt)
     self.isMoving = false
   end
 
-  -- if love.keyboard.isDown("f") then
-  --   bullet:new()
-  -- end
+  if love.keyboard.isDown("f") then
+    projectileEngineObj:createProjectile(bullet, self.x, self.y, self.direction)
+  end
 
 end
 

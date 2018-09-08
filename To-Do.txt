@@ -1,0 +1,8 @@
+Projectile
+  - hitbox
+player
+  - controls
+first character model
+  - design (abilities/style)
+  - sprites 
+  - implementation

@@ -4,30 +4,33 @@ projectileEngine = class('projectileEngine')
 function projectileEngine:initialize()
     self.activeProjectiles = {}
     self.deletedProjectiles = {}
+    self.test = 10
 end
 
-function projecttileEngine:createProjectile(projectile, x, y, direction)
-    if self.deletedProjectiles[projectile] = nil or self.deletedProjectiles[projectile].getn() = 0 then
-        local projectileObj = projectile:new(x, y, direction)
-        if self.activeProjectiles[projectile] == nil then
-            table.insert(self.activeProjectiles[projectile], Stack:new().push(projectileObj))
+function projectileEngine:createProjectile(projectileClass, x, y, direction)
+    if self.deletedProjectiles[projectileClass] == nil or self.deletedProjectiles[projectileClass].getn() == 0 then
+        local projectileObj = projectileClass:new(x, y, direction)
+        if self.activeProjectiles[projectileClass] == nil then
+            table.insert(self.activeProjectiles, projectileClass, stack:new().push(projectileObj))
         else
-            self.activeProjectiles[projectile].push(projectileObj)
+            self.activeProjectiles[projectileClass].push(projectileObj)
         end
+        table.insert(layer.projectiles, projectileObj)
     else
-        local projectileObj = self.deletedProjectiles[projectile].pop().reInitialize(x, y, direction)
-        self.activeProjectiles[projectile].push(projectileObj)
+        local projectileObj = self.deletedProjectiles[projectileClass].pop().reInitialize(x, y, direction)
+        self.activeProjectiles[projectileClass].push(projectileObj)
+        table.insert(layer.projectiles, projectileObj)
     end
 end
 
-function projectileEngine:deleteProjectile(projectile)
-    if self.activeProjectiles[projectile] = nil or self.activeProjectiles[projectile].getn() = 0 then
+function projectileEngine:deleteProjectile(projectileClass)
+    if self.activeProjectiles[projectileClass] == nil and self.activeProjectiles[projectileClass].getn() == 0 then
         print ("projectile either already deleted or doesnt exist")
     else
-        if self.deletedProjectiles[projectile] = nil then
-            table.insert(self.deletedProjectiles[projectile], Stack:new().push(self.activeProjectiles[projectile].pop())
+        if self.deletedProjectiles[projectileClass] == nil then
+            table.insert(self.deletedProjectiles, projectileClass, stack:new().push(self.activeProjectiles[projectileClass].pop()))
         else
-            self.deletedProjectiles[projectile].push(self.activeProjectiles[projectile].pop())
+            self.deletedProjectiles[projectileClass].push(self.activeProjectiles[projectileClass].pop())
         end
     end
 end

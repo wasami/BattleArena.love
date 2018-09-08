@@ -1,9 +1,11 @@
 class = require "Library.middleclass"
 anim8 = require "Library.anim8"
+require "Library.stack"
+require "Projectiles.projectileEngine"
 require "Projectiles.projectile"
 require "player"
 require "bullet"
-require "Projectiles.projectileEngine"
+
 
 
 local sti = require "sti"
@@ -18,16 +20,16 @@ function love.load()
   map = sti("Map/map.lua", { "bump" })
 
   -- prepare physics world
-  -- world = love.physics.newWorld(0, 0)
+  world = bump.newWorld()
 
   -- prepare collision objects
-  -- map:box2d_init(world)
+  map:bump_init(world)
 
   -- add coustom layer for sprites
-  local layer = map:addCustomLayer("Sprites", 3)
+  layer = map:addCustomLayer("Sprites", 3)
 
   -- create projectile engine to handle projectile
-  local projectileEngine = projectileEngine:new()
+  projectileEngineObj = projectileEngine:new()
 
   -- Get player spawn object
   local playerSpawn
@@ -37,18 +39,30 @@ function love.load()
             break
         end
     end
-  
-  
+  -- make a list for objects in sprite layer
+  layer.projectiles = {}
+
+  -- add player to the layer
   layer.player = player:new(playerSpawn.x, playerSpawn.y)
+  
 
   -- Draw player
   layer.draw = function(self)
     self.player:draw()
+    for i,v in pairs(self.projectiles) do
+      v:draw()
+    end
   end
 
   -- controls for player
   layer.update = function(self, dt)
     self.player:update(dt)
+    for i,v in pairs(self.projectiles) do
+      v:update(dt)
+      if v.isActive == false then
+        table.remove(layer.projectiles, i)
+      end
+    end
   end
 
   -- Remove unneeded object layer
@@ -63,12 +77,12 @@ end
 
 function love.draw()
   -- Translate world so that player is always centred
-  local player = map.layers["Sprites"].player
-  -- print(player.x)
-  local tx = math.floor(player.x - love.graphics.getWidth() / 2)
-  local ty = math.floor(player.y - love.graphics.getHeight() / 2)
-  -- print(tx)
-  love.graphics.translate(-tx, -ty)
+  -- local player = map.layers["Sprites"].player
+
+  -- local tx = math.floor(player.x - love.graphics.getWidth() / 2)
+  -- local ty = math.floor(player.y - love.graphics.getHeight() / 2)
+
+  -- love.graphics.translate(-tx, -ty)
 
   -- Draw world
   map:draw()

@@ -1,16 +1,16 @@
 -- class which defines stack type object
 
-Stack = class('Stack')
+stack = class('stack')
 
 
-function Stack:initialize()
+function stack:initialize()
     -- entry table
     self.entry = {}
 end
 
 
 -- push a value on to the stack
-function Stack:push(...)
+function stack:push(...)
     if ... then
     local targs = {...}
     -- add values
@@ -21,7 +21,7 @@ function Stack:push(...)
 end
 
 -- pop a value from the stack
-function Stack:pop(num)
+function stack:pop(num)
 
     -- get num values from stack
     local num = num or 1
@@ -45,12 +45,12 @@ function Stack:pop(num)
 end
 
 -- get entries
-function Stack:getn()
+function stack:getn()
     return #self.entry
 end
 
 -- list values
-function Stack:list()
+function stack:list()
     for i,v in pairs(self.entry) do
     print(i, v)
     end
