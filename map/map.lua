@@ -8,7 +8,7 @@ return {
   height = 20,
   tilewidth = 32,
   tileheight = 32,
-  nextobjectid = 3,
+  nextobjectid = 4,
   properties = {},
   tilesets = {
     {
@@ -127,6 +127,19 @@ return {
           shape = "rectangle",
           x = 131,
           y = 192,
+          width = 30,
+          height = 31,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 3,
+          name = "npc",
+          type = "",
+          shape = "rectangle",
+          x = 257,
+          y = 321,
           width = 30,
           height = 31,
           rotation = 0,

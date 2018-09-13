@@ -5,11 +5,11 @@ function projectile:initialize(x, y, direction)
     self.x = x
     self.y = y
     self.direction = direction
-    self.speed = 50 -- deafault
+    self.speed = 500 -- deafault
     self.isActive = true 
 end
 
-function projectile:reInitilize(x, y, direction)
+function projectile:reInitialize(x, y, direction)
     self.x = x
     self.y = y
     self.direction = direction
@@ -18,34 +18,42 @@ function projectile:reInitilize(x, y, direction)
 end
 
 function projectile:update(dt)
+  local dx,dy = 0,0
+
   if self.direction == 1 then
-      self.y = self.y - 5
+      dy = -self.speed * dt
     elseif self.direction == 2 then
-      self.x = self.x + 5
+      dx = self.speed * dt
     elseif self.direction == 3 then
-      self.y = self.y + 5
+      dy = self.speed * dt
     elseif self.direction == 4 then
-      self.x = self.x - 5
+      dx = -self.speed * dt
     elseif self.direction == 5 then
-      self.y = self.y - 5
-      self.x = self.x + 5
+      dy = -self.speed * dt
+      dx =  self.speed * dt
     elseif self.direction == 6 then
-      self.y = self.y + 5
-      self.x = self.x + 5
+      dy =  self.speed * dt
+      dx =  self.speed * dt
     elseif self.direction == 7 then
-      self.y = self.y + 5
-      self.x = self.x - 5
+      dy =  self.speed * dt
+      dx = -self.speed * dt
     elseif self.direction == 8 then
-      self.y = self.y - 5
-      self.x = self.x - 5
+      dy = -self.speed * dt
+      dx = -self.speed * dt
     end
+
+    if dx ~= 0 or dy ~= 0 then
+      local cols
+      self.x, self.y, cols, cols_len = world:move(self, self.x + dx, self.y + dy, self.filter)
+    end
+
     if self.y < -10 then
       self:delete()
     elseif self.x < -10 then
       self:delete()
-    elseif self.x > 800 then
+    elseif self.x > 640 then
       self:delete()
-    elseif self.y > 600 then
+    elseif self.y > 640 then
       self:delete()
     end
 end
@@ -55,6 +63,8 @@ end
 -- end
 
 function projectile:delete()
+  -- print("projectile deleted")
   self.x, self.y = 0
   self.isActive = false
+  world:remove(self)
 end

@@ -10,7 +10,7 @@
 --]]
 player = class('player')
 
-function player:initialize(x, y)
+function player:initialize(x, y, w, h)
   self.playerImage = love.graphics.newImage('Sprites/nakedSprite.jpg')
 
   local p32 = anim8.newGrid(32,32, 416, 416, 0, 0, 0)
@@ -20,8 +20,9 @@ function player:initialize(x, y)
   self.direction = 1 
   self.x = x
   self.y = y
+  self.w = w
+  self.h = h
   self.speed = 100
-  self.ability = {}
 
   self.punch = function()
     movement:pause()
@@ -63,53 +64,62 @@ function player:initialize(x, y)
 end
 
 function player:update(dt)
-  self.movement[self.direction]:update(dt)
-  self.punching[self.direction]:update(dt)
-  diagSpeed = (self.speed * self.speed) + (self.speed * self.speed)
+  local dx, dy = 0, 0
 
   if love.keyboard.isDown("up") and love.keyboard.isDown("right") then
     self.direction = 5
-    self.y = self.y - (self.speed * dt)
-    self.x = self.x + (self.speed * dt)
+    dy = -self.speed * dt
+    dx =  self.speed * dt
     self.isMoving = true
   elseif love.keyboard.isDown("down") and love.keyboard.isDown("right") then
     self.direction = 6
-    self.y = self.y + (self.speed * dt)
-    self.x = self.x + (self.speed * dt)
+    dy = self.speed * dt
+    dx = self.speed * dt
     self.isMoving = true
   elseif love.keyboard.isDown("down") and love.keyboard.isDown("left") then
     self.direction = 7
-    self.y = self.y + (self.speed * dt)
-    self.x = self.x - (self.speed * dt)
+    dy = self.speed * dt
+    dx = -self.speed * dt
     self.isMoving = true
   elseif love.keyboard.isDown("up") and love.keyboard.isDown("left") then
     self.direction = 8
-    self.y = self.y - (self.speed * dt)
-    self.x = self.x - (self.speed * dt)
+    dy = - self.speed * dt
+    dx = - self.speed * dt
     self.isMoving = true
   elseif love.keyboard.isDown("right") then
-    self.x = self.x + (self.speed * dt)
+    dx = self.speed * dt
     self.direction = 2
     self.isMoving = true
   elseif love.keyboard.isDown("left") then
-    self.x = self.x - (self.speed * dt)
+    dx = -self.speed * dt
     self.direction = 4
     self.isMoving = true
   elseif love.keyboard.isDown("down") then
-    self.y = self.y + (self.speed * dt)
+    dy = self.speed * dt
     self.direction = 3
     self.isMoving = true
   elseif love.keyboard.isDown("up") then
-    self.y = self.y - (self.speed * dt)
+    dy = -self.speed * dt
     self.direction = 1
     self.isMoving = true
   else
     self.isMoving = false
   end
+  
+  if dx ~= 0 or dy ~= 0 then
+    -- print ("making moves")
+    -- print (dy)
+    -- print (dx)
+    local cols
+    self.x, self.y, cols, cols_len = world:move(self, self.x + dx, self.y + dy)
+  end
 
   if love.keyboard.isDown("f") then
     projectileEngineObj:createProjectile(bullet, self.x, self.y, self.direction)
   end
+
+  self.movement[self.direction]:update(dt)
+  self.punching[self.direction]:update(dt)
 
 end
 
@@ -119,14 +129,9 @@ function player:draw()
   else
     self.standing[self.direction]:draw(self.playerImage, self.x, self.y)
   end
-  if love.keyboard.isDown("g") then
-    --movement:pause(1)
-    self.punching[self.direction]:draw(self.playerImage, self.x, self.y)
-    --movement:resume()
-  end
 
-  -- for _,v in pairs(self.ability) do
-  --   love.graphics.rectangle("fill", v.x, v.y, 5, 5)
-  -- end
+  if love.keyboard.isDown("g") then
+    self.punching[self.direction]:draw(self.playerImage, self.x, self.y)
+  end
 
 end

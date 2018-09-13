@@ -1,20 +1,37 @@
 class = require "Library.middleclass"
 anim8 = require "Library.anim8"
+baton = require "Library.baton"
+bump  = require "Library.bump"
+sti = require "sti"
 require "Library.stack"
 require "Projectiles.projectileEngine"
 require "Projectiles.projectile"
 require "player"
 require "bullet"
+require "mob"
 
-
-
-local sti = require "sti"
-local map
-local world
+map = nil
+world = nil
+input = nil
 
 function love.load()
   -- set size of client window
   love.window.setMode(640, 640)
+
+  -- setup player controls
+  input = baton.new {
+    controls = {
+      left = {'key:left', 'key:a', 'axis:leftx-', 'button:dpleft'},
+      right = {'key:right', 'key:d', 'axis:leftx+', 'button:dpright'},
+      up = {'key:up', 'key:w', 'axis:lefty-', 'button:dpup'},
+      down = {'key:down', 'key:s', 'axis:lefty+', 'button:dpdown'},
+      fire = {'key:f'}
+    },
+    pairs = {
+      move = {'left', 'right', 'up', 'down'}
+    },
+    joystick = love.joystick.getJoysticks()[1],
+  }
 
   -- load map
   map = sti("Map/map.lua", { "bump" })
@@ -33,22 +50,37 @@ function love.load()
 
   -- Get player spawn object
   local playerSpawn
+  local npcSpawn
     for k, object in pairs(map.objects) do
         if object.name == "Player" then
             playerSpawn = object
-            break
+        elseif object.name == "npc" then
+            npcSpawn = object
         end
     end
   -- make a list for objects in sprite layer
   layer.projectiles = {}
+  layer.players = {}
 
   -- add player to the layer
-  layer.player = player:new(playerSpawn.x, playerSpawn.y)
-  
+  local player = player:new(playerSpawn.x, playerSpawn.y, 32, 32)
+  -- layer.player = player
+  table.insert(layer.players, player)
+  world:add(player, player.x, player.y, player.w, player.h)
 
+  -- add npc to the layer
+  local npc = mob:new(npcSpawn.x, npcSpawn.y, 32, 32)
+  -- layer.npc = ncp
+  table.insert(layer.players, npc)
+  world:add(npc, npc.x, npc.y, npc.w, npc.h)
+  
   -- Draw player
   layer.draw = function(self)
-    self.player:draw()
+    -- self.player:draw()
+    -- self.npc:draw()
+    for i,v in pairs(self.players) do
+      v:draw()
+    end
     for i,v in pairs(self.projectiles) do
       v:draw()
     end
@@ -56,10 +88,16 @@ function love.load()
 
   -- controls for player
   layer.update = function(self, dt)
-    self.player:update(dt)
+    -- self.player:update(dt)
+    -- self.npc:update(dt)
+    for i,v in pairs(self.players) do
+      v:update(dt)
+    end
     for i,v in pairs(self.projectiles) do
       v:update(dt)
       if v.isActive == false then
+        -- world:remove(v)
+        projectileEngineObj:deleteProjectile(v.name)
         table.remove(layer.projectiles, i)
       end
     end
@@ -71,6 +109,7 @@ function love.load()
 end
 
 function love.update(dt)
+  input:update()
   map:update(dt)
   --p1:update(dt)
 end
@@ -83,8 +122,15 @@ function love.draw()
   -- local ty = math.floor(player.y - love.graphics.getHeight() / 2)
 
   -- love.graphics.translate(-tx, -ty)
+  -- test projectile engine
+  -- print ("Active:" , projectileEngineObj:getActiveProjectiles())
+  -- print ("Deleted:" , projectileEngineObj:getDeletedProjectiles())
 
   -- Draw world
+  -- love.graphics.setColor(255, 255, 255)
   map:draw()
+
+  -- love.graphics.setColor(255, 0, 0)
+  -- map:bump_draw()
   --p1:draw()
 end
