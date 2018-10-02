@@ -12,26 +12,10 @@ require "mob"
 
 map = nil
 world = nil
-input = nil
 
 function love.load()
   -- set size of client window
   love.window.setMode(640, 640)
-
-  -- setup player controls
-  input = baton.new {
-    controls = {
-      left = {'key:left', 'key:a', 'axis:leftx-', 'button:dpleft'},
-      right = {'key:right', 'key:d', 'axis:leftx+', 'button:dpright'},
-      up = {'key:up', 'key:w', 'axis:lefty-', 'button:dpup'},
-      down = {'key:down', 'key:s', 'axis:lefty+', 'button:dpdown'},
-      fire = {'key:f'}
-    },
-    pairs = {
-      move = {'left', 'right', 'up', 'down'}
-    },
-    joystick = love.joystick.getJoysticks()[1],
-  }
 
   -- load map
   map = sti("Map/map.lua", { "bump" })
@@ -109,7 +93,6 @@ function love.load()
 end
 
 function love.update(dt)
-  input:update()
   map:update(dt)
   --p1:update(dt)
 end

@@ -23,11 +23,21 @@ function player:initialize(x, y, w, h)
   self.w = w
   self.h = h
   self.speed = 100
-
-  self.punch = function()
-    movement:pause()
-  end
-    
+  
+  -- setup player controls
+  self.input = baton.new {
+    controls = {
+      left = {'key:left', 'key:a', 'axis:leftx-', 'button:dpleft'},
+      right = {'key:right', 'key:d', 'axis:leftx+', 'button:dpright'},
+      up = {'key:up', 'key:w', 'axis:lefty-', 'button:dpup'},
+      down = {'key:down', 'key:s', 'axis:lefty+', 'button:dpdown'},
+      fire = {'key:f'}
+    },
+    pairs = {
+      move = {'left', 'right', 'up', 'down'}
+    },
+    joystick = love.joystick.getJoysticks()[1],
+  }
 
   self.movement = {
     anim8.newAnimation(p32(4,3, 13,2, 8,3, 12,3),0.1),--north
@@ -64,57 +74,41 @@ function player:initialize(x, y, w, h)
 end
 
 function player:update(dt)
-  local dx, dy = 0, 0
 
-  if love.keyboard.isDown("up") and love.keyboard.isDown("right") then
-    self.direction = 5
-    dy = -self.speed * dt
-    dx =  self.speed * dt
-    self.isMoving = true
-  elseif love.keyboard.isDown("down") and love.keyboard.isDown("right") then
-    self.direction = 6
-    dy = self.speed * dt
-    dx = self.speed * dt
-    self.isMoving = true
-  elseif love.keyboard.isDown("down") and love.keyboard.isDown("left") then
-    self.direction = 7
-    dy = self.speed * dt
-    dx = -self.speed * dt
-    self.isMoving = true
-  elseif love.keyboard.isDown("up") and love.keyboard.isDown("left") then
-    self.direction = 8
-    dy = - self.speed * dt
-    dx = - self.speed * dt
-    self.isMoving = true
-  elseif love.keyboard.isDown("right") then
-    dx = self.speed * dt
-    self.direction = 2
-    self.isMoving = true
-  elseif love.keyboard.isDown("left") then
-    dx = -self.speed * dt
-    self.direction = 4
-    self.isMoving = true
-  elseif love.keyboard.isDown("down") then
-    dy = self.speed * dt
-    self.direction = 3
-    self.isMoving = true
-  elseif love.keyboard.isDown("up") then
-    dy = -self.speed * dt
-    self.direction = 1
-    self.isMoving = true
-  else
-    self.isMoving = false
-  end
+	self.input:update()
+
+	local dx, dy = 0, 0
+	x, y = self.input:get('move')
+	dy = y * self.speed * dt
+	dx = x * self.speed * dt
+
+	-- set player direction
+	if (x == 0) then
+		if (y > 0 ) then self.direction = 3
+		elseif (y < 0) then self.direction = 1 end
+	elseif (x > 0) then
+		if (y > 0 ) then self.direction = 5
+		elseif (y < 0) then self.direction = 6
+		else self.direction = 2 end
+	else
+		if (y > 0 ) then self.direction = 8
+		elseif (y < 0) then self.direction = 7
+		else self.direction = 4 end
+	end
+
+	-- set player to be moving
+	if (not (x == 0) or not (y == 0)) then
+		self.isMoving = true
+	else
+		self.isMoving = false
+	end
   
   if dx ~= 0 or dy ~= 0 then
-    -- print ("making moves")
-    -- print (dy)
-    -- print (dx)
     local cols
     self.x, self.y, cols, cols_len = world:move(self, self.x + dx, self.y + dy)
   end
 
-  if love.keyboard.isDown("f") then
+  if self.input:pressed 'fire' then
     projectileEngineObj:createProjectile(bullet, self.x, self.y, self.direction)
   end
 
