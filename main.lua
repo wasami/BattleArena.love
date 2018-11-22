@@ -9,9 +9,11 @@ require "Projectiles.projectile"
 require "player"
 require "bullet"
 require "mob"
+require "bar"
 
 map = nil
 world = nil
+lineWidth = 1
 
 function love.load()
   -- set size of client window
@@ -45,6 +47,11 @@ function love.load()
   -- make a list for objects in sprite layer
   layer.projectiles = {}
   layer.players = {}
+  layer.bars = {}
+
+  local healthBar = bar:new(100, 20, 100, 20)
+
+  table.insert(layer.bars, healthBar)
 
   -- add player to the layer
   local player = player:new(playerSpawn.x, playerSpawn.y, 32, 32)
@@ -57,6 +64,8 @@ function love.load()
   -- layer.npc = ncp
   table.insert(layer.players, npc)
   world:add(npc, npc.x, npc.y, npc.w, npc.h)
+
+
   
   -- Draw player
   layer.draw = function(self)
@@ -66,6 +75,9 @@ function love.load()
       v:draw()
     end
     for i,v in pairs(self.projectiles) do
+      v:draw()
+    end
+    for i,v in pairs(self.bars) do
       v:draw()
     end
   end

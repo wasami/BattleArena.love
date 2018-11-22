@@ -1,15 +1,18 @@
 Projectile
-  - hitbox
-
+  - hitbox (needs working)
+	
 player
-  - controls
   - UI
+    - player HUD
+  - health bar
 
-first character model
+first character model - (working on!)
   - design (abilities/style)
   - sprites 
   - implementation
 
 Map
   - first arena
+
+Game Menu and load up
 
