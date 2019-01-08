@@ -49,7 +49,7 @@ function love.load()
   layer.players = {}
   layer.bars = {}
 
-  local healthBar = bar:new(100, 20, 100, 20)
+  local healthBar = bar:new(100, 20, 100, 20, 100)
 
   table.insert(layer.bars, healthBar)
 

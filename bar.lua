@@ -3,12 +3,12 @@ bar = class('bar')
 
 local border_thickness = 2
 
-function bar:initialize(x, y, w, h)
+function bar:initialize(x, y, w, h, percentage)
     self.x = x
     self.y = y
     self.w = w
     self.h = h
-    self.percentage = 100
+    self.percentage = percentage
     self.fill_space = self.w - border_thickness
 
     self.outline_colour = {0, 0, 0, 255}
@@ -16,6 +16,11 @@ end
 
 function bar:set(percentage)
     self.percentage = math.max(0, math.min(percentage, 100))
+end
+
+function bar:move(x, y)
+    self.x = x
+    self.y = y
 end
 
 function bar:draw()

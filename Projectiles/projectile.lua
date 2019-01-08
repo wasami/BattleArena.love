@@ -18,6 +18,17 @@ function projectile:reInitialize(x, y, direction)
 end
 
 function projectile:update(dt)
+  -- if the projectile leaves the playable area
+  if self.y < -10 then
+    self:delete()
+  elseif self.x < -10 then
+    self:delete()
+  elseif self.x > 640 then
+    self:delete()
+  elseif self.y > 640 then
+    self:delete()
+  end
+
   local dx,dy = 0,0
 
   if self.direction == 1 then
@@ -45,16 +56,10 @@ function projectile:update(dt)
     if dx ~= 0 or dy ~= 0 then
       local cols
       self.x, self.y, cols, cols_len = world:move(self, self.x + dx, self.y + dy, self.filter)
-    end
-
-    if self.y < -10 then
-      self:delete()
-    elseif self.x < -10 then
-      self:delete()
-    elseif self.x > 640 then
-      self:delete()
-    elseif self.y > 640 then
-      self:delete()
+      if cols_len > 0 then
+        --self:delete()
+        print("Collided")
+      end
     end
 end
 

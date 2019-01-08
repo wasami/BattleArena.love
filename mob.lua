@@ -5,7 +5,8 @@ function mob:initialize(x, y, w, h)
     local p32 = anim8.newGrid(32,32, 416, 416, 0, 0, 0)
 
     self.isMoving = false
-    self.health = 100
+    self.currentHealth = 100
+    self.maxHealth = 100
     self.direction = 1 
     self.x = x
     self.y = y
@@ -13,6 +14,8 @@ function mob:initialize(x, y, w, h)
     self.h = h
 
     self.name = mob.name
+
+    self.healthBar = bar:new(x + w / 2, y, w, 5, (self.currentHealth/self.maxHealth) * 100)
 
     self.standing = {
         anim8.newAnimation(p32(2,1),0.1),
@@ -46,4 +49,5 @@ function mob:draw()
     else
         self.standing[self.direction]:draw(self.mobImage, self.x, self.y)
     end
+    self.healthBar:draw()
 end

@@ -66,5 +66,6 @@ function bullet:update(dt)
 end
 
 function bullet:draw()
+    love.graphics.setColor(255, 255, 255, 255)
     love.graphics.rectangle("fill", self.x, self.y, 5, 5)
 end
