@@ -17,13 +17,15 @@ function player:initialize(x, y, w, h)
 
   self.isMoving = false
   self.health = 100
-  self.direction = 1 
+  self.direction = 1
   self.x = x
   self.y = y
+  self.destX = x
+  self.destY = y
   self.w = w
   self.h = h
   self.speed = 100
-  
+
   -- setup player controls
   self.input = baton.new {
     controls = {
@@ -77,44 +79,60 @@ function player:update(dt)
 
 	self.input:update()
 
-	local dx, dy = 0, 0
+    local dx, dy = 0, 0
+
+    -- calculate how much player should move
+    -- if self.x ~= self.destX then
+    --     dx = math.floor((dt*self.speed)*((self.destX-self.x)/math.abs(self.destX-self.x)))
+    -- end
+    --
+    -- if self.y ~= self.destY then
+    --     dy = math.floor((dt*self.speed)*((self.destY-self.y)/math.abs(self.destY-self.y)))
+    -- end
+
 	x, y = self.input:get('move')
-	dy = y * self.speed * dt
-	dx = x * self.speed * dt
+
+    -- if dx == 0 and dy == 0 then
+    dy = y * self.speed * dt
+    dx = x * self.speed * dt
+    -- end
 
 	-- set player direction
-	if (x == 0) then
-		if (y > 0 ) then self.direction = 3
-		elseif (y < 0) then self.direction = 1 end
-	elseif (x > 0) then
-		if (y > 0 ) then self.direction = 5
-		elseif (y < 0) then self.direction = 6
+	if (dx == 0) then
+		if (dy > 0 ) then self.direction = 3
+		elseif (dy < 0) then self.direction = 1 end
+	elseif (dx > 0) then
+		if (dy > 0 ) then self.direction = 5
+		elseif (dy < 0) then self.direction = 6
 		else self.direction = 2 end
-	else
-		if (y > 0 ) then self.direction = 8
-		elseif (y < 0) then self.direction = 7
+    else
+        if (dy > 0 ) then self.direction = 8
+		elseif (dy < 0) then self.direction = 7
 		else self.direction = 4 end
 	end
 
-	-- set player to be moving
-	if (not (x == 0) or not (y == 0)) then
-		self.isMoving = true
-	else
-		self.isMoving = false
-	end
-  
-  if dx ~= 0 or dy ~= 0 then
-    local cols
-    self.x, self.y, cols, cols_len = world:move(self, self.x + dx, self.y + dy)
-  end
+    -- move the player if possible
+    if dx ~= 0 or dy ~= 0 then
+        local cols
+        local actualX, actualY, cols, cols_len = world:move(self, self.x + dx, self.y + dy)
 
-  if self.input:pressed 'fire' then
-    projectileEngineObj:createProjectile(bullet, self.x, self.y, self.direction)
-  end
+        if actualX == self.x and actualY == self.y then
+            self.isMoving = false
+        else
+            self.isMoving = true
+        end
 
-  self.movement[self.direction]:update(dt)
-  self.punching[self.direction]:update(dt)
+        self.x, self.y = actualX, actualY
+    else
+        self.isMoving = false
+    end
 
+    if self.input:pressed 'fire' then
+        projectileEngineObj:createProjectile(bullet, self.x, self.y, self.direction)
+    end
+
+    self.movement[self.direction]:update(dt)
+    self.punching[self.direction]:update(dt)
 end
 
 function player:draw()

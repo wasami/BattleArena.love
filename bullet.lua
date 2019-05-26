@@ -21,7 +21,7 @@ function bullet:initialize(x, y, direction)
         self.y = y - 1
     elseif direction == 2 then
         self.x = x + 33
-        self.y = y + 17
+        self.y = y - 17
     elseif direction == 3 then
         self.x = x + 17
         self.y = y + 33
@@ -47,14 +47,12 @@ function bullet:initialize(x, y, direction)
     self.h = 5
 
     self.filter = function(item, other)
-        if  other.name == mob   then    
+        if  other.name == mob   then
             return 'bounce'
-        else 
+        else
             return 'slide'
         end
     end
-
-    
 end
 
 function bullet:reInitialize(x, y, direction)

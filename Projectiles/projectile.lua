@@ -5,27 +5,31 @@ function projectile:initialize(x, y, direction)
     self.x = x
     self.y = y
     self.direction = direction
-    self.speed = 500 -- deafault
-    self.isActive = true 
+    self.speed = 0 -- deafault
+    self.isActive = true
 end
 
 function projectile:reInitialize(x, y, direction)
     self.x = x
     self.y = y
     self.direction = direction
-    self.speed = 50 -- deafault
-    self.isActive = true 
+    self.speed = 0 -- deafault
+    self.isActive = true
 end
 
 function projectile:update(dt)
   -- if the projectile leaves the playable area
   if self.y < -10 then
+      print("out of bounds")
     self:delete()
   elseif self.x < -10 then
+      print("out of bounds")
     self:delete()
   elseif self.x > 640 then
+      print("out of bounds")
     self:delete()
   elseif self.y > 640 then
+      print("out of bounds")
     self:delete()
   end
 
@@ -53,12 +57,12 @@ function projectile:update(dt)
       dx = -self.speed * dt
     end
 
-    if dx ~= 0 or dy ~= 0 then
+    if self.isActive and (dx ~= 0 or dy ~= 0) then
       local cols
       self.x, self.y, cols, cols_len = world:move(self, self.x + dx, self.y + dy, self.filter)
       if cols_len > 0 then
         --self:delete()
-        print("Collided")
+        print("Collided at x: " .. self.x .. " y: " .. self.y)
       end
     end
 end
