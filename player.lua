@@ -11,68 +11,68 @@
 player = class('player')
 
 function player:initialize(x, y, w, h)
-  self.playerImage = love.graphics.newImage('Sprites/nakedSprite.jpg')
+    --setup player sprite
+    self.playerImage = love.graphics.newImage('Sprites/nakedSprite.jpg')
 
-  local p32 = anim8.newGrid(32,32, 416, 416, 0, 0, 0)
+    local p32 = anim8.newGrid(32,32, self.playerImage:getWidth(), self.playerImage:getHeight(), 0, 0, 0)
 
-  self.isMoving = false
-  self.health = 100
-  self.direction = 1
-  self.x = x
-  self.y = y
-  self.destX = x
-  self.destY = y
-  self.w = w
-  self.h = h
-  self.speed = 100
+    self.isMoving = false
+    self.health = 100
+    self.direction = 1
+    self.x = x
+    self.y = y
+    self.destX = x
+    self.destY = y
+    self.w = w
+    self.h = h
+    self.speed = 100
 
-  -- setup player controls
-  self.input = baton.new {
-    controls = {
-      left = {'key:left', 'key:a', 'axis:leftx-', 'button:dpleft'},
-      right = {'key:right', 'key:d', 'axis:leftx+', 'button:dpright'},
-      up = {'key:up', 'key:w', 'axis:lefty-', 'button:dpup'},
-      down = {'key:down', 'key:s', 'axis:lefty+', 'button:dpdown'},
-      fire = {'key:f'}
-    },
-    pairs = {
-      move = {'left', 'right', 'up', 'down'}
-    },
-    joystick = love.joystick.getJoysticks()[1],
-  }
-
-  self.movement = {
-    anim8.newAnimation(p32(4,3, 13,2, 8,3, 12,3),0.1),--north
-    anim8.newAnimation(p32(13,3, 1,3, 5,3, 9,3), 0.1),--east
-    anim8.newAnimation(p32(3,3, 12,2, 7,3, 11,3), 0.1),--south
-    anim8.newAnimation(p32(1,4, 2,3, 6,3, 10,3), 0.1),--west
-    anim8.newAnimation(p32(13,3, 1,3, 5,3, 9,3), 0.1),--northeast
-    anim8.newAnimation(p32(13,3, 1,3, 5,3, 9,3), 0.1),--southeast
-    anim8.newAnimation(p32(1,4, 2,3, 6,3, 10,3), 0.1),--northwest
-    anim8.newAnimation(p32(1,4, 2,3, 6,3, 10,3), 0.1),--southwest
-  }
-  self.standing = {
-    anim8.newAnimation(p32(2,1),0.1),
-    anim8.newAnimation(p32(3,1),0.1),
-    anim8.newAnimation(p32(1,1),0.1),
-    anim8.newAnimation(p32(4,1),0.1),
-    anim8.newAnimation(p32(3,1),0.1),
-    anim8.newAnimation(p32(3,1),0.1),
-    anim8.newAnimation(p32(4,1),0.1),
-    anim8.newAnimation(p32(4,1),0.1),
-  }
-  self.punching = {
-      anim8.newAnimation(p32(10,5, 1,6),0.1),--north
-      anim8.newAnimation(p32(11,5, 2,6),0.1),--east
-      anim8.newAnimation(p32(9,5, 13,5),0.1),--south
-      anim8.newAnimation(p32(12,5, 3,6),0.1),--west
-      anim8.newAnimation(p32(11,5, 2,6),0.1),--northeast
-      anim8.newAnimation(p32(11,5, 2,6),0.1),--southeast
-      anim8.newAnimation(p32(12,5, 3,6),0.1),--northwest
-      anim8.newAnimation(p32(12,5, 3,6),0.1),--southwest
+    -- setup player controls
+    self.input = baton.new {
+        controls = {
+            left = {'key:left', 'key:a', 'axis:leftx-', 'button:dpleft'},
+            right = {'key:right', 'key:d', 'axis:leftx+', 'button:dpright'},
+            up = {'key:up', 'key:w', 'axis:lefty-', 'button:dpup'},
+            down = {'key:down', 'key:s', 'axis:lefty+', 'button:dpdown'},
+            fire = {'key:f'}
+        },
+        pairs = {
+            move = {'left', 'right', 'up', 'down'}
+        },
+        joystick = love.joystick.getJoysticks()[1]
     }
 
-  -- print("player was initialized")
+    --movement animation
+    self.movement = {
+        anim8.newAnimation(p32(4,3, 13,2, 8,3, 12,3),0.1),--north
+        anim8.newAnimation(p32(13,3, 1,3, 5,3, 9,3), 0.1),--east
+        anim8.newAnimation(p32(3,3, 12,2, 7,3, 11,3), 0.1),--south
+        anim8.newAnimation(p32(1,4, 2,3, 6,3, 10,3), 0.1),--west
+        anim8.newAnimation(p32(13,3, 1,3, 5,3, 9,3), 0.1),--northeast
+        anim8.newAnimation(p32(13,3, 1,3, 5,3, 9,3), 0.1),--southeast
+        anim8.newAnimation(p32(1,4, 2,3, 6,3, 10,3), 0.1),--northwest
+        anim8.newAnimation(p32(1,4, 2,3, 6,3, 10,3), 0.1),--southwest
+    }
+    self.standing = {
+        anim8.newAnimation(p32(2,1),0.1),
+        anim8.newAnimation(p32(3,1),0.1),
+        anim8.newAnimation(p32(1,1),0.1),
+        anim8.newAnimation(p32(4,1),0.1),
+        anim8.newAnimation(p32(3,1),0.1),
+        anim8.newAnimation(p32(3,1),0.1),
+        anim8.newAnimation(p32(4,1),0.1),
+        anim8.newAnimation(p32(4,1),0.1),
+    }
+    self.punching = {
+        anim8.newAnimation(p32(10,5, 1,6),0.1),--north
+        anim8.newAnimation(p32(11,5, 2,6),0.1),--east
+        anim8.newAnimation(p32(9,5, 13,5),0.1),--south
+        anim8.newAnimation(p32(12,5, 3,6),0.1),--west
+        anim8.newAnimation(p32(11,5, 2,6),0.1),--northeast
+        anim8.newAnimation(p32(11,5, 2,6),0.1),--southeast
+        anim8.newAnimation(p32(12,5, 3,6),0.1),--northwest
+        anim8.newAnimation(p32(12,5, 3,6),0.1),--southwest
+    }
 end
 
 function player:update(dt)

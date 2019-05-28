@@ -143,8 +143,11 @@ function love.draw()
   love.graphics.rectangle("line", world:getRect(player))
   love.graphics.setLineWidth(lineWidth)
 
-  love.graphics.setColor(100, 1, 0, 0)
+  love.graphics.setColor(1, 0, 0, 0.2)
   love.graphics.rectangle("fill", world:getRect(player))
+
+  love.graphics.setColor(0, 0, 0)
+  love.graphics.rectangle("fill", player.x, player.y, 2, 2)
 end
 
 function love.mousepressed(x, y, button)
