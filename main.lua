@@ -139,6 +139,11 @@ function love.draw()
   map:draw()
 
   -- Draw collision map for debugging
+  drawCollision()
+end
+
+function drawCollision()
+  -- first draw collision box of player
   love.graphics.setColor(1, 0, 0)
   love.graphics.rectangle("line", world:getRect(player))
   love.graphics.setLineWidth(lineWidth)
@@ -146,8 +151,13 @@ function love.draw()
   love.graphics.setColor(1, 0, 0, 0.2)
   love.graphics.rectangle("fill", world:getRect(player))
 
-  love.graphics.setColor(0, 0, 0)
-  love.graphics.rectangle("fill", player.x, player.y, 2, 2)
+  -- draw collision box of npc
+  love.graphics.setColor(1, 0, 1)
+  love.graphics.rectangle("line", world:getRect(npc))
+  love.graphics.setLineWidth(lineWidth)
+
+  love.graphics.setColor(1, 0, 0, 0.2)
+  love.graphics.rectangle("fill", world:getRect(npc))
 end
 
 function love.mousepressed(x, y, button)
