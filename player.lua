@@ -17,6 +17,7 @@ function player:initialize(x, y, w, h)
     local p32 = anim8.newGrid(32,32, self.playerImage:getWidth(), self.playerImage:getHeight(), 0, 0, 0)
 
     self.isMoving = false
+    self.isGrounded = true
     self.health = 100
     self.direction = 1
     self.x = x
@@ -26,6 +27,8 @@ function player:initialize(x, y, w, h)
     self.w = w
     self.h = h
     self.speed = 100
+    self.gravity = 1
+    self.jumpForce = 100
 
     -- setup player controls
     self.input = baton.new {
@@ -34,12 +37,12 @@ function player:initialize(x, y, w, h)
             right = {'key:right', 'key:d', 'axis:leftx+', 'button:dpright'},
             up = {'key:up', 'key:w', 'axis:lefty-', 'button:dpup'},
             down = {'key:down', 'key:s', 'axis:lefty+', 'button:dpdown'},
-            fire = {'key:f'}
+            fire = {'key:f'},
+            jump = {'key:space'}
         },
         pairs = {
             move = {'left', 'right', 'up', 'down'}
-        },
-        joystick = love.joystick.getJoysticks()[1]
+        }
     }
 
     --movement animation

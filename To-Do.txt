@@ -1,11 +1,13 @@
+Physics
+  - Collisions
+  - Movement
+
 Projectile
   - hitbox (needs working)
 	
 player
   - UI
     - player HUD
-  - health bar
-
 first character model - (working on!)
   - design (abilities/style)
   - sprites 
